@@ -16,7 +16,7 @@ struct Goal: Identifiable {
     var star_count: Int
     var share_count: Int
     var comment_count: Int
-    
+
     static var emtpyGoal = Goal(
         planet: .Tech,
         title: "Title",

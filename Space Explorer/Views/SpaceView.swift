@@ -1,5 +1,5 @@
 //
-//  CenteredSpaceView.swift
+//  SpaceView.swift
 //  Space Explorer
 //
 //  Created by 정희균 on 3/26/25.
@@ -53,9 +53,9 @@ struct SpaceView: View {
                         learner: $learner,
                         planet: .Design
                     )
-                        .navigationTransition(
-                            .zoom(sourceID: Planet.Design, in: namespace)
-                        )
+                    .navigationTransition(
+                        .zoom(sourceID: Planet.Design, in: namespace)
+                    )
                 } label: {
                     VStack {
                         Image(.design)
@@ -79,10 +79,11 @@ struct SpaceView: View {
                     PlanetDetailView(
                         learnerStore: learnerStore,
                         learner: $learner,
-                        planet: .Tech)
-                        .navigationTransition(
-                            .zoom(sourceID: Planet.Tech, in: namespace)
-                        )
+                        planet: .Tech
+                    )
+                    .navigationTransition(
+                        .zoom(sourceID: Planet.Tech, in: namespace)
+                    )
                 } label: {
                     VStack {
                         Image(.tech)
@@ -106,10 +107,11 @@ struct SpaceView: View {
                     PlanetDetailView(
                         learnerStore: learnerStore,
                         learner: $learner,
-                        planet: .Business)
-                        .navigationTransition(
-                            .zoom(sourceID: Planet.Business, in: namespace)
-                        )
+                        planet: .Business
+                    )
+                    .navigationTransition(
+                        .zoom(sourceID: Planet.Business, in: namespace)
+                    )
                 } label: {
                     VStack {
                         Image(.business)

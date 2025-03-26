@@ -10,7 +10,7 @@ import SwiftUI
 struct ExploreView: View {
     @Namespace var namespace
     @ObservedObject var learnerStore: LearnerStore
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -30,7 +30,7 @@ struct ExploreView: View {
                 .ignoresSafeArea()
                 ScrollView {
                     LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
-                        ForEach(0..<learnerStore.learners.count, id: \.self) { index in
+                        ForEach(0 ..< learnerStore.learners.count, id: \.self) { index in
                             let learner = learnerStore.learners[index]
                             NavigationLink {
                                 SpaceView(
@@ -38,9 +38,9 @@ struct ExploreView: View {
                                     learner: learnerStore
                                         .getBindingLearner(learner)
                                 )
-                                    .navigationTransition(
-                                        .zoom(sourceID: index, in: namespace)
-                                    )
+                                .navigationTransition(
+                                    .zoom(sourceID: index, in: namespace)
+                                )
                             } label: {
                                 VStack {
                                     Image(.earth)

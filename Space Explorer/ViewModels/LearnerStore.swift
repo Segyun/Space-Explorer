@@ -8,9 +8,7 @@
 import SwiftUI
 
 class LearnerStore: ObservableObject {
-    @Published var learners: [Learner] = []
-    @Published var mainLearner: Learner = .init(name: "", goals: [])
-    @Published var goals: [Goal] = []
+    // MARK: Lifecycle
 
     init() {
         var alex = Learner(name: "Alex")
@@ -22,19 +20,17 @@ class LearnerStore: ObservableObject {
             // Jack's Goals
 
             Goal(
-                planet: .Design, title: "UX/UI 관련 책 읽기",
-
+                planet: .Design,
+                title: "UX/UI 관련 책 읽기",
                 description:
-                "UX/UI 디자인을 더 깊이 이해하기 위해 다양한 서적을 읽고 실무 적용 방안을 연구하기.",
-
+                    "UX/UI 디자인을 더 깊이 이해하기 위해 다양한 서적을 읽고 실무 적용 방안을 연구하기.",
                 creater_id: jack.id, star_count: 10, share_count: 4,
                 comment_count: 3),
 
             Goal(
-                planet: .Design, title: "피그마 공부하기",
-
+                planet: .Design,
+                title: "피그마 공부하기",
                 description: "Figma의 주요 기능과 디자인 시스템을 학습하고 프로젝트에 적용해보기.",
-
                 creater_id: jack.id, star_count: 12, share_count: 5,
                 comment_count: 4),
 
@@ -74,7 +70,7 @@ class LearnerStore: ObservableObject {
                 planet: .Business, title: "CBL 마스터하기",
 
                 description:
-                "CBL(Challenge Based Learning) 학습 방식에 대한 이해도를 높이고 실무 적용하기.",
+                    "CBL(Challenge Based Learning) 학습 방식에 대한 이해도를 높이고 실무 적용하기.",
 
                 creater_id: jack.id, star_count: 9, share_count: 3,
                 comment_count: 2),
@@ -83,7 +79,7 @@ class LearnerStore: ObservableObject {
                 planet: .Business, title: "iOS 앱 출시하기",
 
                 description:
-                "Swift 및 SwiftUI를 활용하여 완성도 높은 iOS 앱을 개발하고 앱스토어에 출시하기.",
+                    "Swift 및 SwiftUI를 활용하여 완성도 높은 iOS 앱을 개발하고 앱스토어에 출시하기.",
 
                 creater_id: jack.id, star_count: 15, share_count: 8,
                 comment_count: 6),
@@ -245,7 +241,7 @@ class LearnerStore: ObservableObject {
                 print("No id")
             }
         }
-        
+
         addLearner(alex)
         addLearner(jack)
         addLearner(skyler)
@@ -254,12 +250,18 @@ class LearnerStore: ObservableObject {
         self.goals = goals
     }
 
+    // MARK: Internal
+
+    @Published var learners: [Learner] = []
+    @Published var mainLearner: Learner = .init(name: "", goals: [])
+    @Published var goals: [Goal] = []
+
     func addGoal(learner: Binding<Learner>, goal: Goal) {
         goals.append(goal)
 
         learner.wrappedValue.goals.append(goals.last!.id)
     }
-    
+
     func removeGoal(learner: Binding<Learner>, goal: Goal) {
         learner.wrappedValue.goals.removeAll { $0 == goal.id }
     }
@@ -305,22 +307,29 @@ class LearnerStore: ObservableObject {
     func getBindingLearner(_ learner: Learner) -> Binding<Learner> {
         Binding<Learner>(
             get: {
-                guard let index = self.learners.firstIndex(
-                    where: { $0.id == learner
-                        .id
-                    }) else { return Learner(name: "Empty") }
+                guard
+                    let index = self.learners.firstIndex(
+                        where: {
+                            $0.id
+                                == learner
+                                .id
+                        })
+                else { return Learner(name: "Empty") }
                 return self.learners[index]
             },
             set: { newValue in
-                guard let index = self.learners.firstIndex(
-                    where: { $0.id == learner
-                        .id
-                    }) else { return }
+                guard
+                    let index = self.learners.firstIndex(
+                        where: {
+                            $0.id
+                                == learner
+                                .id
+                        })
+                else { return }
                 self.learners[index] = newValue
-            }
-        )
+            })
     }
-    
+
     func hasLearnerGoal(learner: Learner, goal: Goal) -> Bool {
         learner.goals.contains(goal.id)
     }

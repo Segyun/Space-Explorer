@@ -7,19 +7,85 @@
 
 import SwiftUI
 
+enum TakingGoalPhase: CaseIterable {
+    case initial
+    case move
+    case hide
+    case back
+
+    var earthOffset: Double {
+        switch self {
+        case .initial:
+            return -50
+        case .move:
+            return 10
+        case .hide:
+            return 10
+        case .back:
+            return -50
+        }
+    }
+
+    var planetOffset: Double {
+        switch self {
+        case .initial:
+            return 0
+        case .move:
+            return -150
+        case .hide:
+            return 0
+        case .back:
+            return 0
+        }
+    }
+
+    var scale: Double {
+        switch self {
+        case .initial:
+            return 1.0
+        case .move:
+            return 0.0
+        case .hide:
+            return 0.0
+        case .back:
+            return 1.0
+        }
+    }
+}
+
 struct GoalDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var learnerStore: LearnerStore
     var goalID: UUID
 
+    @State private var takingGoal = false
+
     var body: some View {
         let goal = learnerStore.goals.first(
             where: { $0.id == goalID
             }) ?? Goal.emtpyGoal
-        
+
         ZStack {
             VisualEffectView(effect: UIBlurEffect(style: .dark))
                 .ignoresSafeArea()
+            VStack {
+                Image(.earth)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50)
+                    .phaseAnimator(
+                        TakingGoalPhase.allCases,
+                        trigger: takingGoal
+                    ) { content, phase in
+                        content.offset(y: phase.earthOffset)
+                    } animation: { phase in
+                        if phase == .back {
+                            return .default.delay(0.3)
+                        }
+                        return .default
+                    }
+                Spacer()
+            }
             VStack {
                 HStack {
                     Text("Goal")
@@ -31,7 +97,8 @@ struct GoalDetailView: View {
                             .hasLearnerGoal(
                                 learner: learnerStore.mainLearner,
                                 goal: goal
-                            ) {
+                            )
+                        {
                             Button {
                                 learnerStore
                                     .removeGoal(
@@ -52,6 +119,8 @@ struct GoalDetailView: View {
                                         learner: $learnerStore.mainLearner,
                                         goal: goal
                                     )
+
+                                takingGoal.toggle()
                             } label: {
                                 Image(systemName: "square.and.arrow.down")
                                     .frame(width: 30, height: 30)
@@ -77,6 +146,18 @@ struct GoalDetailView: View {
                     .scaledToFit()
                     .frame(width: 100, height: 100)
                     .padding(.vertical, 70)
+                    .phaseAnimator(
+                        TakingGoalPhase.allCases,
+                        trigger: takingGoal
+                    ) { content, phase in
+                        content.scaleEffect(phase.scale)
+                            .offset(y: phase.planetOffset)
+                    } animation: { phase in
+                        if phase == .back {
+                            return .default.delay(0.3)
+                        }
+                        return .default
+                    }
 
                 Text(goal.title)
                     .font(.title)
@@ -103,7 +184,7 @@ struct GoalDetailView: View {
                     }
                 }
                 .padding(.vertical)
-                
+
                 Text(
                     goal.description
                 )
@@ -147,7 +228,7 @@ struct GoalDetailView: View {
 
 #Preview {
     @ObservedObject var learnerStore = LearnerStore()
-    var goal = Goal(
+    let goal = Goal(
         planet: .Tech,
         title: "title",
         description: "description",
@@ -156,13 +237,13 @@ struct GoalDetailView: View {
         share_count: 0,
         comment_count: 0
     )
-    
+
     learnerStore
         .addGoal(
             learner: $learnerStore.mainLearner,
             goal: goal
         )
-    
+
     return GoalDetailView(
         learnerStore: LearnerStore(), goalID: goal.id
     )

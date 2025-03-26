@@ -14,8 +14,9 @@ struct PlanetDetailView: View {
 
     var planet: Planet?
 
-    let baseRadius: CGFloat = 200
+    let baseRadius: CGFloat = 150
     let spacing: CGFloat = 100
+    let goalOffset: [CGFloat] = [-50, 70, -80, 50, 10]
 
     @State private var selectedGoalID = UUID()
     @State private var isShowingDetail: Bool = false
@@ -44,6 +45,14 @@ struct PlanetDetailView: View {
                         .resizable()
                         .scaledToFit()
 
+                    if learnerStore
+                        .getGoalsFromLearner($learner, planet: planet!).isEmpty
+                    {
+                        Text("아직 목표가 추가되지 않았어요.")
+                            .foregroundStyle(.secondary)
+                            .offset(y: -baseRadius - 10)
+                    }
+
                     ForEach(
                         0 ..< learnerStore
                             .getGoalsFromLearner(
@@ -71,9 +80,12 @@ struct PlanetDetailView: View {
                                     isShowingDetail = true
                                 }
                             Text(goal.title)
-                                .frame(width: 200)
+                                .frame(width: 100)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
                         }
                         .offset(
+                            x: goalOffset[index],
                             y: radius
                         )
                     }
@@ -119,19 +131,21 @@ struct PlanetDetailView: View {
                 Button(
                     "추가",
                     action: {
-                        learnerStore
-                            .addGoal(
-                                learner: $learner,
-                                goal: Goal(
-                                    planet: planet!,
-                                    title: title,
-                                    description: "",
-                                    creater_id: learner.id,
-                                    star_count: 0,
-                                    share_count: 0,
-                                    comment_count: 0
+                        withAnimation {
+                            learnerStore
+                                .addGoal(
+                                    learner: $learner,
+                                    goal: Goal(
+                                        planet: planet!,
+                                        title: title,
+                                        description: "",
+                                        creater_id: learner.id,
+                                        star_count: 0,
+                                        share_count: 0,
+                                        comment_count: 0
+                                    )
                                 )
-                            )
+                        }
                     }
                 )
                 Button("취소", role: .cancel, action: {})

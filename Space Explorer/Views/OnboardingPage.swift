@@ -72,9 +72,7 @@ struct OnboardingPage: View {
             .padding()
         }
         .alert("닉네임을 입력해주세요", isPresented: $isAlertShowing, actions: {
-            Button("확인") {
-                
-            }
+            Button("확인") {}
         })
         .preferredColorScheme(.dark)
     }
