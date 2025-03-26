@@ -7,71 +7,38 @@
 
 import SwiftUI
 
-struct VisualEffectView: UIViewRepresentable {
-    var effect: UIVisualEffect?
-    func makeUIView(context: UIViewRepresentableContext<Self>)
-        -> UIVisualEffectView
-    {
-        UIVisualEffectView()
-    }
-
-    func updateUIView(
-        _ uiView: UIVisualEffectView, context: UIViewRepresentableContext<Self>
-    ) {
-        uiView.effect = effect
-    }
-}
-
 struct ContentView: View {
     @Namespace private var namespace
     @State private var isShowingOnboarding: Bool = true
-    @State private var isShowingSpaceView: Bool = true
+    @ObservedObject private var learnerStore = LearnerStore()
 
     var body: some View {
-        if isShowingOnboarding {
-            OnboardingPage(
-                namespace: namespace,
-                isShowingOnboarding: $isShowingOnboarding
-            )
-        } else {
-            ZStack {
-                if isShowingSpaceView {
-                    SpaceView(namespace: namespace)
-                } else {
-                    ExploreView()
-                }
-                VStack {
-                    Spacer()
-                    HStack {
-                        Button {
-                            isShowingSpaceView = true
-                        } label: {
-                            Label(
-                                "Your Space",
-                                systemImage: "globe.asia.australia.fill"
-                            )
-                        }
-                        .padding()
-                        Spacer()
-                        Button {
-                            isShowingSpaceView = false
-                        } label: {
-                            Label("Explore", systemImage: "magnifyingglass")
-                        }
-                        .padding()
-                    }
-                    .padding(
-                        .bottom,
-                        UIApplication.shared.keyWindow?.safeAreaInsets.bottom
-                    )
-                    .background {
-                        VisualEffectView(
-                            effect: UIBlurEffect(style: .systemMaterial)
-                        )
-                    }
-                }
-                .ignoresSafeArea()
+        TabView {
+            Tab {
+                SpaceView(
+                    learnerStore: learnerStore,
+                    learner: $learnerStore.mainLearner
+                )
+            } label: {
+                Label("My Space", systemImage: "star.fill")
             }
+            Tab {
+                ExploreView(learnerStore: learnerStore)
+            } label: {
+                Label("Explore", systemImage: "magnifyingglass")
+            }
+        }
+        .onAppear {
+            if #available(iOS 15.0, *) {
+                UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
+            }
+        }
+        .sheet(isPresented: $isShowingOnboarding) {
+            OnboardingPage(
+                isShowingOnboarding: $isShowingOnboarding,
+                nickname: $learnerStore.mainLearner.name
+            )
+            .interactiveDismissDisabled()
         }
     }
 }
