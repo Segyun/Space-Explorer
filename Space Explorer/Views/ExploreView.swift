@@ -30,12 +30,14 @@ struct ExploreView: View {
                 .ignoresSafeArea()
                 ScrollView {
                     LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
-                        ForEach(0 ..< learnerStore.learners.count, id: \.self) { index in
+                        ForEach(0..<learnerStore.learners.count, id: \.self) {
+                            index in
                             let learner = learnerStore.learners[index]
                             NavigationLink {
                                 SpaceView(
                                     learnerStore: learnerStore,
-                                    learner: learnerStore
+                                    learner:
+                                        learnerStore
                                         .getBindingLearner(learner)
                                 )
                                 .navigationTransition(
@@ -50,7 +52,9 @@ struct ExploreView: View {
                                     Text(learner.name)
                                         .foregroundStyle(.white)
                                 }
-                                .matchedTransitionSource(id: index, in: namespace)
+                                .matchedTransitionSource(
+                                    id: index, in: namespace
+                                )
                                 .padding()
                             }
                         }

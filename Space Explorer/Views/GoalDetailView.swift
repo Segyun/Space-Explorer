@@ -61,9 +61,11 @@ struct GoalDetailView: View {
     @State private var takingGoal = false
 
     var body: some View {
-        let goal = learnerStore.goals.first(
-            where: { $0.id == goalID
-            }) ?? Goal.emtpyGoal
+        let goal =
+            learnerStore.goals.first(
+                where: {
+                    $0.id == goalID
+                }) ?? Goal.emtpyGoal
 
         ZStack {
             VisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -125,7 +127,9 @@ struct GoalDetailView: View {
                                 Image(systemName: "square.and.arrow.down")
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color(uiColor: .label))
-                                    .background(Color(uiColor: .systemBackground))
+                                    .background(
+                                        Color(uiColor: .systemBackground)
+                                    )
                                     .clipShape(Circle())
                             }
                         }
@@ -216,8 +220,9 @@ struct GoalDetailView: View {
                     .foregroundStyle(.secondary)
                 }
                 .padding()
-                .background(Color(uiColor: .systemBackground),
-                            in: RoundedRectangle(cornerRadius: 10))
+                .background(
+                    Color(uiColor: .systemBackground),
+                    in: RoundedRectangle(cornerRadius: 10))
             }
             .padding()
         }

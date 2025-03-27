@@ -30,7 +30,7 @@ struct OnboardingPage: View {
             .ignoresSafeArea()
             VStack {
                 VStack(alignment: .leading) {
-                    Text("Universe of Academy")
+                    Text("LearnerVerse")
                         .font(.largeTitle)
                         .bold()
                         .padding(.bottom, 20)
@@ -71,9 +71,12 @@ struct OnboardingPage: View {
             }
             .padding()
         }
-        .alert("닉네임을 입력해주세요", isPresented: $isAlertShowing, actions: {
-            Button("확인") {}
-        })
+        .alert(
+            "닉네임을 입력해주세요", isPresented: $isAlertShowing,
+            actions: {
+                Button("확인") {}
+            }
+        )
         .preferredColorScheme(.dark)
     }
 }

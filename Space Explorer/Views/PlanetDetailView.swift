@@ -54,7 +54,7 @@ struct PlanetDetailView: View {
                     }
 
                     ForEach(
-                        0 ..< learnerStore
+                        0..<learnerStore
                             .getGoalsFromLearner(
                                 $learner,
                                 planet: planet!
